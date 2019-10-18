@@ -9,6 +9,14 @@ const dbConnection = sqlite.open(path.resolve(__dirname, 'banco.sqlite'), { Prom
 
 const port = process.env.PORT || 3000
 
+app.use('/admin', (req, res, next) =>{
+    if(req.hostname === 'localhost'){
+        next()
+    }else {
+        res.send('Not allonwed')
+    }
+})
+
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname,'public')))
@@ -24,7 +32,6 @@ app.get('/', async(request, response)=> {
         vagas: vagas.filter( vaga => vaga.caegoria === cat.id)
         }
     })
-    //response.send('<h1>Olá FullStack Lab</h1>')
     response.render('home', {
         categorias,
         vagas
